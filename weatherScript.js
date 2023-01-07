@@ -139,7 +139,7 @@ function checkBackground(url){
     let http = new XMLHttpRequest();
     http.open("GET", url, false);
     http.send(null)
-    if(http.responseText.includes("404 Not Found")){
+    if(http.responseText.includes("404 Not Found") || http.responseURL.includes("source-404")){
         return false;
     }else {
         return true;
