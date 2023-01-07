@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WeatherApp</title>
+    <link rel="stylesheet" href="weatherStyles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@600&display=swap" rel="stylesheet">
+    <script src="weatherScript.js" defer></script>
+</head>
+<body>
+    <div class="day">
+        <div class="dayGrid">
+            <div class="dayGridHeader">
+                <div class="citySearch">
+                    <div id="search">
+                        <input type="text" class="searchBar" id="searchBar">
+                        <button class="searchButton"><img class="searchImage" src="./icons/icons8-search-128.png"></button>
+                    </div>
+                    <div class="city">
+                        <h2 id="city">City</h2>
+                    </div>
+                </div>
+                <div class="dayInfo">
+                    <h1 id="time">44:44</h1>
+                    <h2 id="date">Wednesday, 31 </h2>
+                    <h2 id="month">January</h2>
+                </div>
+            </div>
+            <div class="dayData" id="dayData">
+                <div class="iconWithTemp">
+                    <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weatherIcon" class="mainWeatherIcon" id="mainWeatherIcon">
+                    <div class="tmpInfo">
+                        <div class="todayTemperature">-15 °C</div>
+                        <div class="description">Zatazeno</div>
+                    </div>
+                </div>
+                <div class="info" id="info">
+                    <div class="humidity">
+                        <div>Vlhkost</div>
+                        <div id="humidityValue">20 %</div>
+                    </div>
+                    <div class="windSpeed">
+                        <div>Rychlost větru</div>
+                        <div>6km/h</div>
+                    </div>
+                    <div class="sunRise">
+                        <div>Východ slunce</div>
+                        <div>08:00</div>
+                    </div>
+                    <div class="sunSet">
+                        <div>Západ slunce</div>
+                        <div>16:00</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="otherDays">
+        <div class="otherDay">
+            <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weatherIcon" class="weatherIcon">
+            <div class="dayName">Čtvrtek</div>
+            <div class="temp">Noc - 3°C</div>
+            <div class="temp">Den - 7°C</div>
+            <div class="zapad">Západ slunce - 00:00</div>
+        </div>
+        <div class="otherDay">
+            <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weatherIcon" class="weatherIcon">
+            <div class="dayName">Čtvrtek</div>
+            <div class="temp">Noc - 3°C</div>
+            <div class="temp">Den - 7°C</div>
+            <div class="zapad">Západ slunce - 00:00</div>
+        </div>
+        <div class="otherDay">
+            <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weatherIcon" class="weatherIcon">
+            <div class="dayName">Čtvrtek</div>
+            <div class="temp">Noc - 3°C</div>
+            <div class="temp">Den - 7°C</div>
+            <div class="zapad">Západ slunce - 00:00</div>
+        </div>
+        <div class="otherDay">
+            <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weatherIcon" class="weatherIcon">
+            <div class="dayName">Čtvrtek</div>
+            <div class="temp">Noc - 3°C</div>
+            <div class="temp">Den - 7°C</div>
+            <div class="zapad">Západ slunce - 00:00</div>
+        </div>
+        <div class="otherDay">
+            <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weatherIcon" class="weatherIcon">
+            <div class="dayName">Čtvrtek</div>
+            <div class="temp">Noc - 3°C</div>
+            <div class="temp">Den - 7°C</div>
+            <div class="zapad">Západ slunce - 00:00</div>
+        </div>
+        <div class="otherDay">
+            <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weatherIcon" class="weatherIcon">
+            <div class="dayName">Čtvrtek</div>
+            <div class="temp">Noc - 3°C</div>
+            <div class="temp">Den - 7°C</div>
+            <div class="zapad">Západ slunce - 00:00</div>
+        </div>
+        <div class="otherDay">
+            <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weatherIcon" class="weatherIcon">
+            <div class="dayName">Čtvrtek</div>
+            <div class="temp">Noc - 3°C</div>
+            <div class="temp">Den - 7°C</div>
+            <div class="zapad">Západ slunce - 00:00</div>
+        </div>
+        <div class="otherDay">
+            <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weatherIcon" class="weatherIcon">
+            <div class="dayName">Čtvrtek</div>
+            <div class="temp">Noc - 3°C</div>
+            <div class="temp">Den - 7°C</div>
+            <div class="zapad">Západ slunce - 00:00</div>
+        </div>
+    </div>
+    <script src="weatherScript.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
+            integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</body>
+</html>
