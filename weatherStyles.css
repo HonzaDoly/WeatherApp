@@ -2,6 +2,7 @@
    box-sizing: border-box;
     margin: 0;
     padding: 0;
+    zoom: 100%;
 }
 body{
     /*display: grid;*/
@@ -175,7 +176,7 @@ h1{
     transition-duration: 0.3s;
 }
 
-@media only screen and (max-width: 1680px) {
+@media only screen and (max-width: 2000px) {
     .otherDays{
         justify-content: start;
         overflow-y: scroll;

@@ -15,7 +15,6 @@ const months = ["Leden", "Únor", "Březen", "Duben", "Květen", "Červen", "Če
 
 const APIKEY = "eb2ae4fa5ad552196600a6b55ffdbc0e";
 
-//document.getElementById("city").style.visibility = "hidden";
 document.querySelector("body").style.visibility = "hidden";
 let hidden = true;
 
@@ -96,7 +95,8 @@ function displayData(data) {
     }
     //displaying another days data
     displayAnotherDaysData(lat, lon)
-    history.pushState("", "", "/WeatherApp/weatherApp.html" + "?city=" + lastValidCity)
+    let url = "/WeatherApp/weatherApp.html" + "?city=" + lastValidCity;
+    history.pushState(lastValidCity, null, url)
     if (hidden) {
         document.querySelector("body").style.visibility = "visible";
         hidden = false;
@@ -213,3 +213,7 @@ function getCityFromParams(){
     }
     getCity();
 }
+
+window.addEventListener('popstate', function (){
+    location.reload();
+});
