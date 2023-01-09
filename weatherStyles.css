@@ -33,9 +33,9 @@ body{
     justify-items: center;
 }
 #chartCanvas{
-    width: 100%;
+    /*width: 100%;*/
     justify-self: center;
-    height: 50%;
+    position: relative;
 }
 .dayButton{
     height: 2em;
@@ -45,7 +45,6 @@ body{
     border: none;
     padding: 3px;
     color: gainsboro;
-    margin: 1px;
 }
 .dayButton:hover{
     background-color: rgba(63, 62, 62, 0.8);
@@ -58,9 +57,8 @@ body{
     border-radius: 5px;
     border: none;
     padding: 3px;
-    margin-top: 10px;
+    margin-top: 20px;
     font-size: 15px;
-    margin: 1px;
 }
 .dayGridHeader{
     display: flex;
@@ -225,7 +223,6 @@ h1{
         overflow-y: scroll;
     }
 }
-
 
 
 #loading{

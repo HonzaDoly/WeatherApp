@@ -30,6 +30,7 @@ if (!(window.location.search.includes("city") || window.location.search.includes
     getCity();
 }
 
+
 setInterval(() => {
     const time = new Date();
     const month = time.getMonth();
@@ -48,6 +49,11 @@ setInterval(() => {
     if (hidden) {
         hideLoading();
         hidden = false;
+    }
+    if(window.location.search.includes("?display=days")){
+        showDays();
+    }else if(window.location.search.includes("?display=hours")){
+        showHours();
     }
 }, 1000);
 
@@ -69,8 +75,10 @@ function getWeather(city){
             }
             lastValidCity = city;
             //let url = "/~dolj14/WeatherApp/weatherApp.html?city=" + lastValidCity;
-            let url = "/WeatherApp/weatherApp.html" + "?city=" + lastValidCity;
-            history.pushState(lastValidCity, null, url)
+            if(!(window.location.search.includes("?display=hours"))){
+                let url = "/WeatherApp/weatherApp.html" + "?city=" + lastValidCity + "&?display=days";
+                history.pushState(lastValidCity, null, url)
+            }
             return response.json();
         })
         .then((data) => displayData(data));
@@ -230,8 +238,9 @@ function getCityFromParams(){
             document.getElementById("searchBar").value = city;
             getWeather(city);
         });
+    }else{
+        getCity();
     }
-    getCity();
 }
 
 window.addEventListener('popstate', function (){
@@ -251,17 +260,29 @@ function hideLoading(){
     document.querySelector("#loading").style.display = "none";
 }
 
-document.querySelector(".chartButton").addEventListener("click", function (){
+function showHours(){
     document.querySelector(".day").style.display = "none";
     document.querySelector(".otherDays").style.display = "none";
     document.querySelector(".chartGrid").style.display = "grid";
+}
 
+document.querySelector(".chartButton").addEventListener("click", function (){
+    //let url = "/~dolj14/WeatherApp/weatherApp.html?city=" + lastValidCity;
+    let url = "/WeatherApp/weatherApp.html" + "?city=" + lastValidCity + "&?display=hours";
+    history.pushState(lastValidCity, null, url)
+    showHours();
 });
 
-document.querySelector(".dayButton").addEventListener("click", function (){
+function showDays(){
     document.querySelector(".day").style.display = "flex";
     document.querySelector(".otherDays").style.display = "flex";
     document.querySelector(".chartGrid").style.display = "none";
+}
+document.querySelector(".dayButton").addEventListener("click", function (){
+    //let url = "/~dolj14/WeatherApp/weatherApp.html?city=" + lastValidCity;
+    let url = "/WeatherApp/weatherApp.html" + "?city=" + lastValidCity + "&?display=days";
+    history.pushState(lastValidCity, null, url)
+    showDays();
 });
 
 function getHourlyData(){
@@ -279,12 +300,21 @@ function getHourlyData(){
         })
         .then((data) => {
             let {timezone_offset} = data;
-            data.hourly.forEach(entry =>{
-                let time = window.moment((entry.dt + timezone_offset - 3600) *1000).format('HH:mm');
+            // cycle for whole 48 hours
+            // data.hourly.forEach(entry =>{
+            //     let time = window.moment((entry.dt + timezone_offset - 3600) *1000).format('HH:mm');
+            //     hoursData[0].push(time);
+            //     hoursData[1].push(entry.temp - 273.15);
+            //     hoursData[2].push(entry.feels_like - 273.15);
+            // });
+
+            //for cycle for only 25 hours
+            for(let i = 0; i <= 24; i++){
+                let time = window.moment((data.hourly[i].dt + timezone_offset - 3600) *1000).format('HH:mm');
                 hoursData[0].push(time);
-                hoursData[1].push(entry.temp - 273.15);
-                hoursData[2].push(entry.feels_like - 273.15);
-            });
+                hoursData[1].push(data.hourly[i].temp - 273.15);
+                hoursData[2].push(data.hourly[i].feels_like - 273.15);
+            }
         })
     return hoursData;
 }
@@ -319,6 +349,11 @@ function displayGraph(data){
                     y: {
                         max: data[1].max,
                         min: data[1].min,
+                        ticks: {
+                            callback: function (value){
+                                return value + "°C"
+                            },
+                        },
                     },
                     x:{
                         min: data[0].min,
@@ -329,10 +364,10 @@ function displayGraph(data){
                 hover: {
                     mode: 'index',
                     intersect: true,
-                }
+                },
             }
     };
 
-    return myChart = new Chart(ctx, config);
+    return new Chart(ctx, config);
 
 }
