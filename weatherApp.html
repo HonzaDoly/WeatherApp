@@ -3,14 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>WeatherApp</title>
-    <link rel="stylesheet" href="weatherStyles.css">
+    <link rel="stylesheet" href="./weatherStyles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@600&display=swap" rel="stylesheet">
-    <script src="weatherScript.js" defer></script>
+    <script src="./weatherScript.js" defer></script>
+    <script src="./chart.umd.js" defer></script>
+
 
 </head>
 <body>
+    <div id="loading"></div>
     <div class="day">
         <div class="dayGrid">
             <div class="dayGridHeader">
@@ -22,11 +25,14 @@
                     <div class="city">
                         <h2 id="city">City</h2>
                     </div>
+                    <div class="chart">
+                        <button class="chartButton">Hodinový vývoj</button>
+                    </div>
                 </div>
                 <div class="dayInfo">
                     <h1 id="time">44:44</h1>
-                    <h2 id="date">Wednesday, 31 </h2>
-                    <h2 id="month">January</h2>
+                    <h2 id="date">January, 31 </h2>
+                    <h2 id="weekDay">Wednesday</h2>
                 </div>
             </div>
             <div class="dayData" id="dayData">
@@ -58,6 +64,7 @@
             </div>
         </div>
     </div>
+
     <div class="otherDays">
         <div class="otherDay">
             <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weatherIcon" class="weatherIcon">
@@ -108,17 +115,16 @@
             <div class="temp">Den - 7°C</div>
             <div class="zapad">Západ slunce - 00:00</div>
         </div>
-        <div class="otherDay">
-            <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weatherIcon" class="weatherIcon">
-            <div class="dayName">Čtvrtek</div>
-            <div class="temp">Noc - 3°C</div>
-            <div class="temp">Den - 7°C</div>
-            <div class="zapad">Západ slunce - 00:00</div>
-        </div>
     </div>
-    <script src="weatherScript.js" defer></script>
+    <div class="chartGrid">
+        <canvas id="chartCanvas"></canvas>
+        <button class="dayButton">Zpět na denní přehled</button>
+    </div>
+    <script src="./weatherScript.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
             integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
 </body>
 </html>

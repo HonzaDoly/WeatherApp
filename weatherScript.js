@@ -2,10 +2,17 @@ const timeElement = document.getElementById("time");
 const dateElement = document.getElementById("date");
 const infoElement = document.getElementById("info");
 const dayDataElement = document.getElementById("dayData");
-const monthElement = document.getElementById("month");
+const weekDayElement = document.getElementById("weekDay");
 
 let currentDay;
 let lastValidCity;
+
+let cityLat;
+let cityLon;
+
+let chart;
+
+const loadingBackground = "url(./icons/mist.jpeg)";
 
 const alertString = "Počasí pro toto město nenalezeno!";
 
@@ -15,8 +22,9 @@ const months = ["Leden", "Únor", "Březen", "Duben", "Květen", "Červen", "Če
 
 const APIKEY = "eb2ae4fa5ad552196600a6b55ffdbc0e";
 
-document.querySelector("body").style.visibility = "hidden";
+showLoading();
 let hidden = true;
+
 
 if (!(window.location.search.includes("city") || window.location.search.includes("City"))){
     getCity();
@@ -33,12 +41,12 @@ setInterval(() => {
     currentDay = day;
 
     timeElement.innerHTML = hour + ":" + minutes;
-    dateElement.innerHTML = days[parseInt(currentDay)] + ", " + date;
-    monthElement.innerHTML = months[month];
+    dateElement.innerHTML = months[month] + ", " + date;
+    weekDayElement.innerHTML = days[parseInt(currentDay)];
 
     //at the initial load, everything is hidden in order not to see the original html
     if (hidden) {
-        document.querySelector("body").style.visibility = "visible";
+        hideLoading();
         hidden = false;
     }
 }, 1000);
@@ -48,7 +56,7 @@ getCityFromParams();
 function getWeather(city){
     //getting data from API. then setting them into json
     fetch(
-        "http://api.openweathermap.org/data/2.5/weather?q="
+        "https://api.openweathermap.org/data/2.5/weather?q="
         +city
         +"&units=metric&appid="
         +APIKEY
@@ -60,6 +68,9 @@ function getWeather(city){
                 throw new Error("not found");
             }
             lastValidCity = city;
+            //let url = "/~dolj14/WeatherApp/weatherApp.html?city=" + lastValidCity;
+            let url = "/WeatherApp/weatherApp.html" + "?city=" + lastValidCity;
+            history.pushState(lastValidCity, null, url)
             return response.json();
         })
         .then((data) => displayData(data));
@@ -70,8 +81,15 @@ function displayData(data) {
     const {icon, description} = data.weather[0];
     const {temp, humidity} = data.main;
     const {lat, lon} = data.coord;
+    cityLat = lat;
+    cityLon = lon;
+    if(chart!=null){
+        chart.destroy();
+    }
+    chart = displayGraph(getHourlyData());
     const {sunrise, sunset} = data.sys;
     const {timezone} = data;
+    const {speed} = data.wind;
     console.log(timezone)
     //document.getElementById("city").style.visibility = "visible";
     document.getElementById("city").innerText = name;
@@ -82,6 +100,7 @@ function displayData(data) {
     document.querySelector(".todayTemperature").innerText = Math.round(temp*10)/10 + "°C";
     document.querySelector(".description").innerText = description;
     document.getElementById("humidityValue").innerText = humidity + " %";
+    document.querySelector(".windSpeed div:nth-child(2)").innerText = speed + " m/s";
 
     // Sunset and sunrise is in unix format, moment lib transfers it into readable fomrat
     document.querySelector(".sunRise div:nth-child(2)").innerText = window.moment((sunrise + timezone - 3600) *1000).format('HH:mm');
@@ -89,16 +108,17 @@ function displayData(data) {
 
    //background setting, if the city does not have any Photo, background is set to a picture of the description of weather
     if(checkBackground("https://source.unsplash.com/1600x900/?" + name)){
-        document.body.style.backgroundImage = "url('https://source.unsplash.com/1600x900/?" + name + "')"
+        let background = "url('https://source.unsplash.com/1600x900/?" + name + "')";
+        document.body.style.backgroundImage = background;
     }else{
-        document.body.style.backgroundImage = "url('https://source.unsplash.com/1600x900/?" + description + "')"
+        let background = "url('https://source.unsplash.com/1600x900/?" + description + "')";
+        document.body.style.backgroundImage = background;
     }
     //displaying another days data
     displayAnotherDaysData(lat, lon)
-    let url = "/WeatherApp/weatherApp.html" + "?city=" + lastValidCity;
-    history.pushState(lastValidCity, null, url)
+
     if (hidden) {
-        document.querySelector("body").style.visibility = "visible";
+        hideLoading();
         hidden = false;
     }
 }
@@ -109,8 +129,8 @@ function displayAnotherDaysData(lat, lon){
         .then((data) => setDaysData(data.daily, data.timezone_offset))
 }
 function setDaysData(data, timezone){
-    for(let i = 0; i <= (data.length) - 1; i++){
-        let anotherDay = currentDay + 1;
+    for(let i = 1; i <= (data.length) - 1; i++){
+        let anotherDay = currentDay;
         let dayPosition = anotherDay + i;
 
         //day position has to be smaller than 6 ( days indexes)
@@ -125,12 +145,12 @@ function setDaysData(data, timezone){
         let {icon} = data[i].weather[0];
         day = Math.round((day - 273.15)*10)/10;
         night = Math.round((night - 273.15)*10)/10;
-        let searchingString = ".otherDays .otherDay:nth-child(" + (i+1) + ")";
-        document.querySelector(searchingString).innerHTML = "<img src=\"http://openweathermap.org/img/wn/" + icon + "@2x.png\" alt=\"weatherIcon\" class=\"weatherIcon\">\n" +
+        let searchingString = ".otherDays .otherDay:nth-child(" + (i) + ")";
+        document.querySelector(searchingString).innerHTML = "<img src=\"https://openweathermap.org/img/wn/" + icon + "@2x.png\" alt=\"weatherIcon\" class=\"weatherIcon\">\n" +
             "            <div class=\"dayName\">"+dayName+"</div>\n" +
-            "            <div class=\"temp\">Noc - " + night + "°C</div>\n" +
-            "            <div class=\"temp\">Den - " + day + "°C</div>\n" +
-            "            <div class=\"zapad\">Západ slunce - " + sunset + "</div>\n" +
+            "            <div class=\"temp\">Den: " + day + "°C</div>\n" +
+            "            <div class=\"temp\">Noc:  " + night + "°C</div>\n" +
+            "            <div class=\"zapad\">Západ slunce: " + sunset + "</div>\n" +
             "        </div>"
     }
 }
@@ -148,7 +168,7 @@ function checkBackground(url){
 
 function search(){
     getWeather(document.getElementById("searchBar").value);
-    document.querySelector("body").style.visibility = "hidden";
+    showLoading();
     hidden = true;
 }
 document.querySelector(".searchBar").addEventListener("keypress", function (e){
@@ -158,7 +178,7 @@ document.querySelector(".searchBar").addEventListener("keypress", function (e){
         }else {
             search();
         }
-        document.querySelector("body").style.visibility = "hidden";
+        showLoading();
         hidden = true;
     }
 });
@@ -197,7 +217,7 @@ function getCityFromParams(){
     let city = urlParams.get('city');
     if (!(city == null)){
         fetch(
-            "http://api.openweathermap.org/data/2.5/weather?q="
+            "https://api.openweathermap.org/data/2.5/weather?q="
             +city
             +"&units=metric&appid="
             +APIKEY
@@ -215,5 +235,104 @@ function getCityFromParams(){
 }
 
 window.addEventListener('popstate', function (){
-    location.reload();
+    window.location.reload();
 });
+
+function showLoading(){
+    document.querySelector(".day").style.display = "none";
+    document.querySelector(".otherDays").style.display = "none";
+    document.querySelector("#loading").style.display = "block";
+    document.body.style.backgroundImage  = loadingBackground;
+}
+
+function hideLoading(){
+    document.querySelector(".day").style.display = "flex";
+    document.querySelector(".otherDays").style.display = "flex";
+    document.querySelector("#loading").style.display = "none";
+}
+
+document.querySelector(".chartButton").addEventListener("click", function (){
+    document.querySelector(".day").style.display = "none";
+    document.querySelector(".otherDays").style.display = "none";
+    document.querySelector(".chartGrid").style.display = "grid";
+
+});
+
+document.querySelector(".dayButton").addEventListener("click", function (){
+    document.querySelector(".day").style.display = "flex";
+    document.querySelector(".otherDays").style.display = "flex";
+    document.querySelector(".chartGrid").style.display = "none";
+});
+
+function getHourlyData(){
+    let realTemp = []
+    let feelsTemp = []
+    let time = []
+    let hoursData = [time, realTemp, feelsTemp];
+    let api = 'https://api.openweathermap.org/data/2.5/onecall?lat=' +
+        cityLat + '&lon=' + cityLon + '&exclude={part}&appid='+APIKEY
+    console.log(api)
+    fetch(api
+    )
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            let {timezone_offset} = data;
+            data.hourly.forEach(entry =>{
+                let time = window.moment((entry.dt + timezone_offset - 3600) *1000).format('HH:mm');
+                hoursData[0].push(time);
+                hoursData[1].push(entry.temp - 273.15);
+                hoursData[2].push(entry.feels_like - 273.15);
+            });
+        })
+    return hoursData;
+}
+
+function displayGraph(data){
+    const ctx = document.getElementById("chartCanvas").getContext("2d");
+
+    console.log(data)
+    const labels = data[0];
+    const dataForGraph = {
+        labels: labels,
+        datasets: [{
+            label: 'Reálná teplota',
+            data: data[1],
+            fill: true,
+            borderColor: 'rgb(0,0,0)',
+            backgroundColor: 'rgba(244,248,248,0)',
+        },{
+            label: 'Pocitová teplota',
+            data: data[2],
+            fill: true,
+            borderColor: 'rgb(8,42,231)',
+            backgroundColor: 'rgba(244,248,248,0)',
+        }]
+    };
+    const config = {
+        type: 'line',
+        data: dataForGraph,
+        options:
+            {
+                scales: {
+                    y: {
+                        max: data[1].max,
+                        min: data[1].min,
+                    },
+                    x:{
+                        min: data[0].min,
+                        max: data[0].max,
+                    }
+                },
+                responsive: true,
+                hover: {
+                    mode: 'index',
+                    intersect: true,
+                }
+            }
+    };
+
+    return myChart = new Chart(ctx, config);
+
+}

@@ -2,24 +2,65 @@
    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    zoom: 100%;
+    zoom: 95%;
+    font-family: 'Merriweather Sans', sans-serif;
 }
 body{
-    /*display: grid;*/
-    /*background-image: url("./icons/jarvis_5b06cefc498e341ef96f3abd.jpeg");*/
     background-repeat: no-repeat;
     background-size: cover;
-    font-family: 'Merriweather Sans', sans-serif;
+
     height: 100vh;
     overflow: hidden;
     color: gainsboro;
+    align-items: center;
 }
 .dayGrid{
     background-color: rgba(63, 62, 62, 0.68);
     width: 45em;
     border-radius: 15px;
     padding: 15px;
-    height: 23em;
+    height: 19.5em;
+}
+.chartGrid{
+    background-color: rgba(244, 248, 248, 0.77);
+    width: 90%;
+    border-radius: 15px;
+    /*padding: 15px;*/
+    height: 100%;
+    margin: 40px auto auto;
+    display: none;
+    flex-direction: column;
+    justify-items: center;
+}
+#chartCanvas{
+    width: 100%;
+    justify-self: center;
+    height: 50%;
+}
+.dayButton{
+    height: 2em;
+    justify-self: center;
+    background-color: rgba(63, 62, 62, 0.44);
+    border-radius: 5px;
+    border: none;
+    padding: 3px;
+    color: gainsboro;
+    margin: 1px;
+}
+.dayButton:hover{
+    background-color: rgba(63, 62, 62, 0.8);
+}
+.chartButton:hover{
+    background-color: rgba(244, 248, 248, 0.8);
+}
+.chartButton{
+    background-color: rgba(244, 248, 248, 0.44);
+    border-radius: 5px;
+    border: none;
+    padding: 3px;
+    margin-top: 10px;
+    font-size: 15px;
+    margin: 1px;
 }
 .dayGridHeader{
     display: flex;
@@ -138,7 +179,7 @@ h1{
     display: flex;
     background-color: rgba(63, 62, 62, 0.68);
     width: 100%;
-    height: 40%;
+    height: 35%;
     position: absolute;
     bottom: 0;
     padding: 35px;
@@ -152,7 +193,7 @@ h1{
 }
 .otherDay{
     min-width: 300px;
-    height: 90%;
+    height: 100%;
     margin: 5px 25px;
     padding: 5px;
     text-align: right;
@@ -161,9 +202,11 @@ h1{
     border: 1px gainsboro solid;
     border-radius: 15px;
     font-size: 15px;
+    white-space: normal;
+    overflow: hidden;
 }
 .otherDay .dayName{
-    padding-bottom: 1.5em;
+    padding-bottom: 0.5em;
     padding-top: 0.5em;
     text-align: center;
     font-size: 20px;
@@ -181,4 +224,22 @@ h1{
         justify-content: start;
         overflow-y: scroll;
     }
+}
+
+
+
+#loading{
+    margin: 200px auto auto;
+    display: none;
+    width: 200px;
+    height: 200px;
+    border: 5px solid #333;
+    border-radius: 50%;
+    border-top-color: #f3f3f3;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
