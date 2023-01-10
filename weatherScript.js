@@ -12,6 +12,7 @@ let cityLon;
 
 let chart;
 
+//const loadingBackground = "url("/~dolj14/WeatherApp/icons/mist.jpeg)";
 const loadingBackground = "url(./icons/mist.jpeg)";
 
 const alertString = "Počasí pro toto město nenalezeno!";
@@ -76,6 +77,7 @@ function getWeather(city){
             lastValidCity = city;
             //let url = "/~dolj14/WeatherApp/weatherApp.html?city=" + lastValidCity;
             if(!(window.location.search.includes("?display=hours"))){
+                //let url = "/~dolj14/WeatherApp/weatherApp.html?city=" + lastValidCity + "&?display=days";
                 let url = "/WeatherApp/weatherApp.html" + "?city=" + lastValidCity + "&?display=days";
                 history.pushState(lastValidCity, null, url)
             }
@@ -84,7 +86,7 @@ function getWeather(city){
         .then((data) => displayData(data));
 }
 function displayData(data) {
-    //retreiving data from json
+    //retrieving data from json
     const {name} = data;
     const {icon, description} = data.weather[0];
     const {temp, humidity} = data.main;
@@ -174,6 +176,7 @@ function checkBackground(url){
     }
 }
 
+//function which retrieves data from search bar
 function search(){
     getWeather(document.getElementById("searchBar").value);
     showLoading();
@@ -199,6 +202,7 @@ document.querySelector(".searchButton").addEventListener("click", function(){
     }
 });
 
+//getting city from the geolocation data
 function getCity(){
     let startingCity;
     navigator.geolocation.getCurrentPosition((success) => {
@@ -212,13 +216,15 @@ function getCity(){
                     getWeather(city);
                 })
     }, (fail) => {
-        startingCity = 'Berlin';
+        //if the geolocation is not allowed, default city is going to be Prague
+        startingCity = 'Prague';
         document.getElementById("searchBar").value = startingCity;
 
         getWeather(startingCity);
     })
 }
 
+//retrieving city from parameters, it enables working with browsing history
 function getCityFromParams(){
     let string = window.location.search;
     let urlParams = new URLSearchParams(string);
@@ -243,10 +249,12 @@ function getCityFromParams(){
     }
 }
 
+//reloading the page when the window back button is clicked
 window.addEventListener('popstate', function (){
     window.location.reload();
 });
 
+//hides elements and shows loading process
 function showLoading(){
     document.querySelector(".day").style.display = "none";
     document.querySelector(".otherDays").style.display = "none";
@@ -254,38 +262,46 @@ function showLoading(){
     document.body.style.backgroundImage  = loadingBackground;
 }
 
+//hides loading process and shows elements
 function hideLoading(){
     document.querySelector(".day").style.display = "flex";
     document.querySelector(".otherDays").style.display = "flex";
     document.querySelector("#loading").style.display = "none";
 }
 
+//hides day data and show chart with hours
 function showHours(){
     document.querySelector(".day").style.display = "none";
     document.querySelector(".otherDays").style.display = "none";
     document.querySelector(".chartGrid").style.display = "grid";
 }
 
+//button for changing to mode to hour mode
 document.querySelector(".chartButton").addEventListener("click", function (){
-    //let url = "/~dolj14/WeatherApp/weatherApp.html?city=" + lastValidCity;
+    //let url = "/~dolj14/WeatherApp/weatherApp.html?city=" + lastValidCity + "&?display=hours";
     let url = "/WeatherApp/weatherApp.html" + "?city=" + lastValidCity + "&?display=hours";
     history.pushState(lastValidCity, null, url)
     showHours();
 });
 
+//hides hours and shows day data
 function showDays(){
     document.querySelector(".day").style.display = "flex";
     document.querySelector(".otherDays").style.display = "flex";
     document.querySelector(".chartGrid").style.display = "none";
 }
+
+//button for getting bac to daily data
 document.querySelector(".dayButton").addEventListener("click", function (){
-    //let url = "/~dolj14/WeatherApp/weatherApp.html?city=" + lastValidCity;
+    //let url = "/~dolj14/WeatherApp/weatherApp.html?city=" + lastValidCity + "&?display=days";
     let url = "/WeatherApp/weatherApp.html" + "?city=" + lastValidCity + "&?display=days";
     history.pushState(lastValidCity, null, url)
     showDays();
 });
 
+//retrieving hourly data from the api
 function getHourlyData(){
+    //using an array of arrays to store the data for chart
     let realTemp = []
     let feelsTemp = []
     let time = []
@@ -300,13 +316,14 @@ function getHourlyData(){
         })
         .then((data) => {
             let {timezone_offset} = data;
+
             // cycle for whole 48 hours
-            // data.hourly.forEach(entry =>{
-            //     let time = window.moment((entry.dt + timezone_offset - 3600) *1000).format('HH:mm');
-            //     hoursData[0].push(time);
-            //     hoursData[1].push(entry.temp - 273.15);
-            //     hoursData[2].push(entry.feels_like - 273.15);
-            // });
+                // data.hourly.forEach(entry =>{
+                //     let time = window.moment((entry.dt + timezone_offset - 3600) *1000).format('HH:mm');
+                //     hoursData[0].push(time);
+                //     hoursData[1].push(entry.temp - 273.15);
+                //     hoursData[2].push(entry.feels_like - 273.15);
+                // });
 
             //for cycle for only 25 hours
             for(let i = 0; i <= 24; i++){
@@ -319,6 +336,7 @@ function getHourlyData(){
     return hoursData;
 }
 
+//displaying hour data using the chart from chart.js lib
 function displayGraph(data){
     const ctx = document.getElementById("chartCanvas").getContext("2d");
 
@@ -367,7 +385,5 @@ function displayGraph(data){
                 },
             }
     };
-
     return new Chart(ctx, config);
-
 }
