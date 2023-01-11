@@ -1,7 +1,5 @@
 const timeElement = document.getElementById("time");
 const dateElement = document.getElementById("date");
-const infoElement = document.getElementById("info");
-const dayDataElement = document.getElementById("dayData");
 const weekDayElement = document.getElementById("weekDay");
 
 let currentDay;
