@@ -100,7 +100,6 @@ function displayData(data) {
     const {sunrise, sunset} = data.sys;
     const {timezone} = data;
     const {speed} = data.wind;
-    console.log(timezone)
     //document.getElementById("city").style.visibility = "visible";
     document.getElementById("city").innerText = name;
 
@@ -308,7 +307,6 @@ function getHourlyData(){
     let hoursData = [time, realTemp, feelsTemp];
     let api = 'https://api.openweathermap.org/data/2.5/onecall?lat=' +
         cityLat + '&lon=' + cityLon + '&exclude={part}&appid='+APIKEY
-    console.log(api)
     fetch(api
     )
         .then((response) => {
@@ -340,7 +338,6 @@ function getHourlyData(){
 function displayGraph(data){
     const ctx = document.getElementById("chartCanvas").getContext("2d");
 
-    console.log(data)
     const labels = data[0];
     const dataForGraph = {
         labels: labels,
